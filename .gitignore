@@ -1,1 +1,6 @@
-
+# python 가상환경 무시
+/myvenv
+# 폰트무시
+/font
+# 이미지 무시
+/image
