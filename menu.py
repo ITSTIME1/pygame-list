@@ -1,6 +1,5 @@
 import pygame
 
-
 # initialize pygame module
 pygame.init()
 
@@ -19,14 +18,33 @@ width, height = screen.get_width(), screen.get_height()
 stWidth = 100
 stHeight = 40
 
+# start_images = []
+# for i in range(25):
+#     if i // 10 == 0:
+#         start_images.append("image/frame_0" + str(i) + "_delay-0.15s.gif")
+#     else:
+#         start_images.append("image/frame_" + str(i) + "_delay-0.15s.gif")
+
+
 
 
 # print(width, height)
 # initialize
 def init():
     # screen fill
-    screen.fill((252, 245, 239)) 
+    screen.fill((252, 245, 239))
+    # create a surface object, image is drawn on it.
+    # for img in start_images:
+    #     chosen_img = pygame.image.load(img)
+    #     screen.blit(chosen_img, (0,0 ))
 
+    # @TODO start game page implmentation
+    background = pygame.image.load("image/back.gif")
+    screen.blit(background, (0, 0))
+    # pygame.display.flip()    
+    # clock = pygame.time.Clock()
+    # clock.tick(2)
+    # Using blit to copy content from one surface to other
     # title
     pygame.display.set_caption("Menu")
 
@@ -37,7 +55,7 @@ def start():
     fontName = "font/Maplestory OTF Bold.otf"
     font = pygame.font.Font(fontName, 30)
     mainFont = pygame.font.Font(fontName, 15)
-    textTitle = font.render("하늘에서 하은이가?", True, (0, 0, 0), (255, 255, 255))
+    textTitle = font.render("하늘에서 하은이가?", True, (255, 255, 255))
     textRect = textTitle.get_rect()
     textRect.centerx, textRect.y = round(720 / 2), round(720 / 2 - 240)
     screen.blit(textTitle, textRect)
@@ -78,7 +96,7 @@ def start():
     mouse = pygame.mouse.get_pos() 
     if width/2 - 100/2 <= mouse[0] <= width/2 - 100/2+100 and height/2 - 100 <= mouse[1] <= height/2 - 100+40:
         pygame.draw.rect(screen,(254, 198, 223),[width/2 - 100/2, height/2 - 100, stWidth, stHeight], 0, 3)
-        # print("start area")
+        print("start area")
 
     if width/2 - 100/2 <= mouse[0] <= width/2 - 100/2+100 and height/2 - 30 <= mouse[1] <= height/2 - 30+40: 
         pygame.draw.rect(screen,(163, 159, 225),[width/2 - 100/2, height/2 - 30, stWidth, stHeight], 0, 3)
@@ -112,6 +130,12 @@ def font():
 
 
 gameStart = True
+
+# once music playing
+pygame.mixer.music.load("audio/짱구는못말려.mp3")
+pygame.mixer.music.play()
+pygame.event.wait()
+
 while gameStart != False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -123,17 +147,14 @@ while gameStart != False:
                 if pygame.mouse.get_pressed(3)[0] == True:
                     # uninitialize pygame module
                     pygame.quit()
-    
     # init screen & title 
     init()
     # start
     start()
     # font setting
     font()
-
-    mouse = pygame.mouse.get_pos()  
-
     pygame.display.update()
+
 
 
 
