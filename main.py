@@ -1,11 +1,11 @@
 import pygame
 import sys
-
+# object py
+import object
 
 # initialize pygame module
-
-
 class InitPygame():
+    # init pygame 
     def __init__(self):
         pygame.init()
         self.screen_size = (720, 720)
@@ -20,8 +20,10 @@ class InitPygame():
         pygame.event.wait()
         self.background = pygame.image.load("image/back.gif")
         self.screen.blit(self.background, (0, 0))
-        self.stWidth = 100
-        self.stHeight = 40
+        
+        # button rect
+        self.rectWidth = 100
+        self.rectHeight = 40
         
         
     def __setting__(self):
@@ -35,9 +37,9 @@ class InitPygame():
         self.textRect = self.textTitle.get_rect()
         self.textRect.centerx, self.textRect.y = round(720 / 2), round(720 / 2 - 240)
         self.screen.blit(self.textTitle, self.textRect)
-        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 - 100, self.stWidth, self.stHeight], 0, 3)
-        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 - 30, self.stWidth, self.stHeight], 0, 3)
-        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 + 40, self.stWidth, self.stHeight], 0, 3) 
+        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 - 100, self.rectWidth, self.rectHeight], 0, 3)
+        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 - 30, self.rectWidth, self.rectHeight], 0, 3)
+        pygame.draw.rect(self.screen,(0, 0, 0),[self.width/2 - 100/2, self.height/2 + 40, self.rectWidth, self.rectHeight], 0, 3) 
         startBtnTitle = self.mainFont.render("시작", True, (255, 255, 255))
         storeBtnTitle = self.mainFont.render("저장", True, (255, 255, 255))
         exitBtnTitle = self.mainFont.render("종료", True, (255, 255, 255))
@@ -68,8 +70,11 @@ class InitPygame():
         # mouse pos & rect
         # mouse recognition
         mouse = pygame.mouse.get_pos() 
+
+
+        # start button
         if self.width/2 - 100/2 <= mouse[0] <= self.width/2 - 100/2+100 and self.height/2 - 100 <= mouse[1] <= self.height/2 - 100+40:
-            pygame.draw.rect(self.screen,(254, 198, 223),[self.width/2 - 100/2, self.height/2 - 100, self.stWidth, self.stHeight], 0, 3)
+            pygame.draw.rect(self.screen,(254, 198, 223),[self.width/2 - 100/2, self.height/2 - 100, self.rectWidth, self.rectHeight], 0, 3)
 
             # 시작 버튼을 클릭했다면 게임 시작
             if self.startButton == False:
@@ -84,8 +89,9 @@ class InitPygame():
                 print("start area")
 
 
+        # score 상태저장소
         if self.width/2 - 100/2 <= mouse[0] <= self.width/2 - 100/2+100 and self.height/2 - 30 <= mouse[1] <= self.height/2 - 30+40: 
-            pygame.draw.rect(self.screen,(163, 159, 225),[self.width/2 - 100/2, self.height/2 - 30, self.stWidth, self.stHeight], 0, 3)
+            pygame.draw.rect(self.screen,(163, 159, 225),[self.width/2 - 100/2, self.height/2 - 30, self.rectWidth, self.rectHeight], 0, 3)
 
 
             if self.storeButton == False:
@@ -100,10 +106,9 @@ class InitPygame():
             # else:
             #     pass
 
-        
+        # 게임종료
         if self.width/2 - 100/2 <= mouse[0] <= self.width/2 - 100/2+100 and self.height/2 + 40 <= mouse[1] <= self.height/2 + 40+40:        
-            pygame.draw.rect(self.screen,(34, 118, 148),[self.width/2 - 100/2, self.height/2 + 40, self.stWidth, self.stHeight], 0, 3)         
-
+            pygame.draw.rect(self.screen,(34, 118, 148),[self.width/2 - 100/2, self.height/2 + 40, self.rectWidth, self.rectHeight], 0, 3)         
 
 
             if self.exitButton == False:
@@ -153,17 +158,37 @@ class InitPygame():
             pygame.display.update()
 
     def __startGame__(self):
+        # 객체를 생성해주고
+        obj = object.Object()
         self.screen.fill((255, 255, 255))
         self.background = pygame.image.load("image/gameStart.jpg")
         self.screen.blit(self.background, (0, 0))
+
+        self.screen.blit(obj.objImage, obj.objRect)
+
+
+        # when key pressed
+        keyPressed = pygame.key.get_pressed()  
         
 
 
-# 객체, (태선, h)
-class Object():
-    def __init__(self):
-        pass
+        if keyPressed[pygame.K_RIGHT] == True:
+            print("오른쪽")
+        
+        elif keyPressed[pygame.K_LEFT] == True:
+            print("왼쪽")
 
+        elif keyPressed[pygame.K_ESCAPE] == True:
+            self.gameStart = True
+            
+
+
+
+        # pressed가 중요
+        # 어떤 키를 눌렀을때 x, y를 업데이트 해줄건지
+        # 음 근데 false를
+
+    
 
         
 
