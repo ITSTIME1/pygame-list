@@ -15,11 +15,16 @@ class InitPygame():
         self.gameStart = True
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
+        self.xpos = self.width / 2 - 50
+        self.ypos = self.height - 100
         pygame.mixer.music.load("audio/짱구는못말려.mp3")
         pygame.mixer.music.play()
         pygame.event.wait()
-        self.background = pygame.image.load("image/back.gif")
-        self.screen.blit(self.background, (0, 0))
+        self.initBackground = pygame.image.load("image/back.gif")
+        self.screen.blit(self.initBackground, (0, 0))
+        # init object
+        self.obj = object.Object()
+        self.obj.position(self.xpos, self.ypos)
         
         # button rect
         self.rectWidth = 100
@@ -148,7 +153,7 @@ class InitPygame():
                     if pygame.mouse.get_pressed(3)[0] == True:
                         # uninitialize pygame module
                         pygame.quit()
-            # 게임은 진행중인데 gameStart 는 True다
+            
 
             if self.initStart == True and self.gameStart == False:
                 self.__startGame__()
@@ -158,30 +163,48 @@ class InitPygame():
             pygame.display.update()
 
     def __startGame__(self):
-        # 객체를 생성해주고
-        obj = object.Object()
-        self.screen.fill((255, 255, 255))
-        self.background = pygame.image.load("image/gameStart.jpg")
-        self.screen.blit(self.background, (0, 0))
-
-        self.screen.blit(obj.objImage, obj.objRect)
-
-
+        startBackground = pygame.image.load("image/gameStart.jpg")
+        self.screen.blit(startBackground, (0, 0))
+        
         # when key pressed
-        keyPressed = pygame.key.get_pressed()  
+        keyPressed = pygame.key.get_pressed()
         
-
-
+        
+        # 오른쪽으로 이동
         if keyPressed[pygame.K_RIGHT] == True:
-            print("오른쪽")
-        
+            self.xpos += 20
+            # 만약 범위를 넘어가게 된다면
+            if self.xpos > 560:
+                print("못가요")
+                self.xpos = 560
+            else:
+                self.obj.position(self.xpos, self.ypos)
+        # 왼쪽으로 이동
         elif keyPressed[pygame.K_LEFT] == True:
-            print("왼쪽")
+            self.xpos -= 20
+            if self.xpos < 0:
+                print("못가요")
+                self.xpos = 0
+            else:
+                self.obj.position(self.xpos, self.ypos)
 
         elif keyPressed[pygame.K_ESCAPE] == True:
+            print("탈출~!")
+            self.screen.blit(self.initBackground, (0, 0))
+            self.xpos = self.width / 2 - 50
+            self.ypos = self.height - 100
+            self.obj.position(self.xpos, self.ypos)
+            # 근본적인 방법은 아닌거 같다.
+            # self.obj.objImage.fill((0, 0, 0, 0))
+            # 탈출했을때 객체를 지워야 하는데 흠..
+            # TODO 객체를 지워야함..
+            # TODO 음악 깔면 좋겠음.
             self.gameStart = True
-            
 
+            
+            
+        
+        self.screen.blit(self.obj.objImage, self.obj.objRect)
 
 
         # pressed가 중요

@@ -6,10 +6,11 @@ class Object():
         self.name = "홍태선"
         self.width = 720
         self.height = 720
+        self.xpos = 720 / 2
+        self.ypos = 720 / 2
         self.objImage = pygame.image.load("image/ship.png")
         self.objRect = self.objImage.get_rect()
     
-    def position(self):
-        self.objRect.centerx = self.width / 2
-        self.objRect.centery = self.height / 2
-
+    def position(self, xpos, ypos):
+        self.objRect.x = xpos
+        self.objRect.y = ypos
