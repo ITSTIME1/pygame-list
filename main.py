@@ -1,7 +1,9 @@
+import random
 import pygame
 import sys
 # object py
 import character
+import heart
 # 현재 Monterey 에서 지원을 하지 않아;;
 # 왜 애플 실리콘 지원 안하는데;
 
@@ -31,13 +33,33 @@ class InitPygame():
         pygame.mixer.music.play()
         pygame.event.wait()
         self.initBackground = pygame.image.load("image/back.gif")
-        self.screen.blit(self.initBackground, (0    , 0))
-        # init object
+        self.screen.blit(self.initBackground, (0, 0))
+        # char object init
         self.charObj = character.ChracterObject(self.name)
+        # heart object init
+        self.heartObj_1 = heart.HeartObject(1)
+        self.heartObj_2 = heart.HeartObject(2)
+        self.heartObj_3 = heart.HeartObject(3)
+        self.heartObj_4 = heart.HeartObject(4)
+
+        # 여러개면됨 지금은 테스트로써 하나만 있다고 가정하고
+        self.heartObjList = [self.heartObj_1, 
+                             self.heartObj_2, 
+                             self.heartObj_3, 
+                             self.heartObj_4]
+        
+        self.h = random.choice(self.heartObjList)
+        self.hX = random.randint(0, self.width - self.h.heartRect.width)
+        self.hY = -10
+        self.hSpeed = 3
         
         # button rect
         self.rectWidth = 100
         self.rectHeight = 40
+
+
+        # speed improve
+        self.count = 0
         
         
     def __setting__(self):
@@ -102,7 +124,7 @@ class InitPygame():
             if self.startBtn == False:
                 pygame.mixer.music.load("audio/mouseClick.wav")
                 pygame.mixer.music.play()
-                pygame.event.wait() 
+                pygame.event.wait()
                 self.startBtn = True 
 
             if pygame.mouse.get_pressed(3)[0] == True:
@@ -159,6 +181,8 @@ class InitPygame():
         self.screen.blit(footerTitle, footerRect)
 
 
+
+
     def __initGame__(self):
         while self.initStart != False:
             for event in pygame.event.get():
@@ -182,16 +206,52 @@ class InitPygame():
             pygame.display.flip()
             # pygame.display.update()
 
+    def heartDraw(self):
+        self.hY += self.hSpeed
+        if self.hY > self.height:
+            self.count += 1
+            # 땅에 떨어진 물체가 3개가 된다면
+            # hSpeed 떨어지는 스피드를 2배씩 증가
+            if self.count == 3:
+                self.count = 0
+                self.hSpeed += 2
+            self.h = random.choice(self.heartObjList)
+            self.hX, self.hY = random.randint(0, self.width - self.h.heartRect.width), -10 
+        
+        return self.screen.blit(self.h.heartImage, (self.hX, self.hY))
 
 
+
+    
 
     def __startGame__(self):
         startBackground = pygame.image.load("image/gameStart.jpg")
         self.screen.blit(startBackground, (0, 0))
-        
-        
+
+        # 일정 점수이상 도달하게 된다면
+        # 맵의 이미지가 바뀌는 것도 구현할 수 있겠네
         # when key pressed
+        # 그걸 해도 되겠따 게임 스타트 버튼을 눌렀을때
+        # 이름을 적게 하고
+        # 만약 그 이름이 홍태선이라고 한다면
+        # 홍태선 너 못하면 죽을줄 알아...
+        # 하는 텍스트가 서서히 나타나고 다 나타났으면 서서히 사라지면서
+        # 맵이 서서히 보이고
+        # 다 보였으면
+        # 3, 2, 1 GameStart 라는 텍스트를 출력하고
+        # 게임이 시작되는거지 바로 시작되는게 아니라
+        # 그렇게 되면서 score가 그려지게 되고 위에
+        # 점수를 얻을때마다 스코어의 점수를 올려주면 바로 갱신이 될 수 있도록 해주고
+        # 하니 얼굴이 좌우로 움직이면서 즉 좌표값을 계속 업데이트하면서
+        # 하트나 혹은 잔소리를 내뿜는거지
+        # 하트먹으면 score += 1
+        # 0퍼센트 하트 먹으면 score -= 1
         keyPressed = pygame.key.get_pressed()
+        
+        # heartObject create
+        self.heartDraw()
+
+        # wordDraw()
         
         
         # 오른쪽으로 이동
