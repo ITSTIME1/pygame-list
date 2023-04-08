@@ -60,6 +60,7 @@ class InitPygame():
 
         # speed improve
         self.count = 0
+        self.score = 0
         
         
     def __setting__(self):
@@ -212,11 +213,32 @@ class InitPygame():
             self.count += 1
             # 땅에 떨어진 물체가 3개가 된다면
             # hSpeed 떨어지는 스피드를 2배씩 증가
-            if self.count == 3:
+            if self.count == 2:
                 self.count = 0
-                self.hSpeed += 2
+                self.hSpeed *=2
             self.h = random.choice(self.heartObjList)
             self.hX, self.hY = random.randint(0, self.width - self.h.heartRect.width), -10 
+        
+        # 음 물체의 위치랑
+        # 플레이어의 현재 y위치 와 물체의 y위치가 플에이어의 위치보다 크거나 같다면 충돌
+
+        # 0% 하트
+        # @TODO 세세한거 더해야됨
+        if self.h == self.heartObj_4:
+            # 생각해보니까 좌표로만 따지고 있네;;
+            # 충돌을 따로 생각해야되겟ㄷ 
+            if self.charObj.charRect.collidepoint(self.hX, self.hY) == True:
+                print("게임종료")  
+                self.gameStart = True
+                # 초기화
+                # 게임 자체 초기화
+                self.__init__()
+        else:
+            if self.charObj.charRect.collidepoint(self.hX, self.hY) == True:
+                self.score += 1
+                self.h = random.choice(self.heartObjList)
+                self.hX, self.hY = random.randint(0, self.width - self.h.heartRect.width), -10
+
         
         return self.screen.blit(self.h.heartImage, (self.hX, self.hY))
 
@@ -227,6 +249,16 @@ class InitPygame():
     def __startGame__(self):
         startBackground = pygame.image.load("image/gameStart.jpg")
         self.screen.blit(startBackground, (0, 0))
+
+        self.fontName = "font/Maplestory OTF Bold.otf"  
+        self.font = pygame.font.Font(self.fontName, 30)
+        self.mainFont = pygame.font.Font(self.fontName, 15)
+        # Score text
+        self.scoreTitle = self.font.render("Score : " + str(self.score), True, (255, 255, 255))
+        self.scoreRect = self.scoreTitle.get_rect()
+        # 상단
+        self.scoreRect.x, self.scoreRect.y = 10, 10
+        self.screen.blit(self.scoreTitle, self.scoreRect)
 
         # 일정 점수이상 도달하게 된다면
         # 맵의 이미지가 바뀌는 것도 구현할 수 있겠네
